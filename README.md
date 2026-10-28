@@ -1,19 +1,28 @@
-# mbd_ws — SO-101 multibody kinematics project
+# so101-mbd-ik
 
-## One-time setup (ROS 2 Humble + Gazebo Harmonic)
-    sudo apt install ros-humble-ros-gzharmonic ros-humble-ros2-control \
-         ros-humble-ros2-controllers ros-humble-xacro ros-humble-robot-state-publisher
-    # gz_ros2_control for Humble must be built against Harmonic from source:
-    cd mbd_ws/src && git clone -b humble https://github.com/ros-controls/gz_ros2_control.git
-    cd .. && rosdep install --from-paths src -yir
-    export GZ_VERSION=harmonic
-    colcon build --symlink-install
-    source install/setup.bash
+Position and velocity inverse kinematics for the SO-101 arm, built with matrix methods (rotation/transformation matrices and the Jacobian) for a multibody dynamics course project. Simulated in Gazebo.
+
+## Packages (in `src/`)
+- `so101_description`: URDF/xacro and meshes
+- `so101_gazebo`: Gazebo launch and controller config
+- `so101_mbd`: forward kinematics, Jacobian, and verification scripts (`fk_check`, `jac_check`)
+
+## Dependencies
+Clone these into `src/`:
+
+```bash
+git clone https://github.com/gazebosim/ros_gz.git
+git clone https://github.com/ros-controls/gz_ros2_control.git
+```
+
+## Build
+```bash
+source /opt/ros/humble/setup.bash
+colcon build
+source install/setup.bash
+```
 
 ## Run
-    ros2 launch so101_gazebo sim.launch.py
-
-## Check
-    ros2 control list_controllers          # all three should be "active"
-    ros2 topic echo /joint_states --once
-    ros2 topic pub --once /arm_controller/commands std_msgs/msg/Float64MultiArray "{data: [0.0, -0.5, 0.5, 0.0, 0.0]}"
+```bash
+ros2 launch so101_gazebo sim.launch.py
+```
